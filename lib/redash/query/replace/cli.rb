@@ -60,6 +60,14 @@ module Redash
           end
         end
 
+        private def redash_url
+          ENV['REDASH_URL'] || raise(ConfigError, "[Redash::Query::Replace] env var `REDASH_URL` must be set.")
+        end
+
+        private def redash_api_key
+          ENV['REDASH_API_KEY'] || raise(ConfigError, "[Redash::Query::Replace] env var `REDASH_API_KEY` must be set.")
+        end
+
       end
     end
   end
