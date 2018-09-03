@@ -32,6 +32,7 @@ You can also define then on `.env` file. (Ref. [dotenv doc](https://github.com/b
 
 Replace query text.
 
+- **--exec**: Run actually. Dry run if this flag is no. (flag, default: no)
 - **--from**: The replaced target string in query text (string, required)
 - **--to**: Replacement string (string, required)
 - **--id**: Query id. Either **--id** or **--all** option is required. (integer, optional)
@@ -41,6 +42,7 @@ Replace query text.
 
 Replace datasource queries have.
 
+- **--exec**: Run actually. Dry run if this flag is no. (flag, default: no)
 - **--from**: The replaced target datasource name (string, required)
 - **--to**: Replacement datasource name (string, required)
 - **--id**: Query id. Either **--id** or **--all** option is required. (integer, optional)
