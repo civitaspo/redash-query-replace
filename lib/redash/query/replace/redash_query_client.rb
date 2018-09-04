@@ -36,6 +36,17 @@ module Redash
           end
         end
 
+        def get_query(id:)
+          url = build_url("/api/queries/#{id}")
+          params = {
+            'api_key' => redash_api_key,
+          }
+          logger.debug { "[Redash::Query::Replace::RedashQueryClient] get_query params: #{mask_values(params)}" }
+          res = RestClient.get(url, params: params)
+          raise_if_error_code(res)
+          JSON.parse(res.body)
+        end
+
         private def logger
           Replace.logger
         end
