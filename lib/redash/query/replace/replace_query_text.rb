@@ -5,13 +5,15 @@ module Redash
     module Replace
       class ReplaceQueryText
 
-        attr_reader :redash_query_client
+        attr_reader :redash_query_client, :backup_dir
 
         # @param [Redash::Query::Replace::RedashQueryClient] redash_query_client
-        # @param [Boolean] dryrun
-        def initialize(redash_query_client:, dry_run: true)
+        # @param [Boolean] dry_run
+        # @param [String] backup_dir
+        def initialize(redash_query_client:, dry_run: true, backup_dir: Dir.mktmpdir)
           @redash_query_client = redash_query_client
           @dry_run = dry_run
+          @backup_dir = backup_dir
         end
 
         private def dry_run?
@@ -27,6 +29,7 @@ module Redash
         # @param [String] to
         def replace(query_id:, from:, to:)
           query = redash_query_client.get_query(id: query_id)
+          backup(query_id: query_id, content: query.to_json)
           replace_query(query_id: query.id, before: query.query, from: from, to: to)
         end
 
@@ -35,6 +38,7 @@ module Redash
         # @param [String] to
         def replace_all(from:, to:)
           redash_query_client.list_queries do |query|
+            backup(query_id: query.id, content: query.to_json)
             replace_query(query_id: query.id, before: query.query, from: from, to: to)
           end
         end
@@ -51,6 +55,12 @@ module Redash
           unless dry_run?
             redash_query_client.update_query_text(id: query_id, query_text: after)
           end
+        end
+
+        private def backup(query_id:, content:)
+          fname = File.join(backup_dir, query_id)
+          logger.info { "[Redash::Query::Replace::ReplaceQueryText] backup original query into: #{fname}" }
+          File.write(fname, content)
         end
 
       end
