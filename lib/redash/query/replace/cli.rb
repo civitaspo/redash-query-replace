@@ -13,16 +13,16 @@ module Redash
           end
         end
 
+        class_option :log_level, aliases: ["-l"], type: :string, default: 'info', desc: 'Log level such as fatal, error, warn, info, or debug. (Default: info)'
+        class_option :log, type: :string, default: 'STDOUT',desc: 'Output log to a file (Default: STDOUT)'
+        class_option :env_file, type: :string, required: false, desc: 'Env vars file (Optional)'
+        class_option :exec, type: :boolean, default: false, dest: 'Run actually. Dry run if this flag is no. (Default: no)'
+        class_option :id, type: :numeric, required: false, desc: 'Query id. Either --id or --all option is required (Optional)'
+        class_option :all, type: :boolean, default: false, desc: 'The flag that all queries became replacement targets. Either --id or --all option is required. (Default: no)'
 
         desc "query", "Replace matched string inside query text."
-        option :log_level, aliases: ["-l"], type: :string, default: 'info', desc: 'Log level such as fatal, error, warn, info, or debug. (Default: info)'
-        option :log, type: :string, default: 'STDOUT',desc: 'Output log to a file (Default: STDOUT)'
-        option :env_file, type: :string, required: false, desc: 'Env vars file (Optional)'
-        option :exec, type: :boolean, default: false, dest: 'Run actually. Dry run if this flag is no. (Default: no)'
         option :from, type: :string, required: true, desc: 'The replaced target string in query text'
         option :to, type: :string, required: true, desc: 'Replacement string'
-        option :id, type: :numeric, required: false, desc: 'Query id. Either --id or --all option is required (Optional)'
-        option :all, type: :boolean, default: false, desc: 'The flag that all queries became replacement targets. Either --id or --all option is required. (Default: no)'
         def query(config)
           init(config)
 
@@ -30,14 +30,8 @@ module Redash
         end
 
         desc "ds", "Replace data source that query has."
-        option :log_level, aliases: ["-l"], type: :string, default: 'info', desc: 'Log level such as fatal, error, warn, info, or debug. (Default: info)'
-        option :log, type: :string, default: 'STDOUT',desc: 'Output log to a file (Default: STDOUT)'
-        option :env_file, type: :string, required: false, desc: 'Env vars file (Optional)'
-        option :exec, type: :boolean, default: false, dest: 'Run actually. Dry run if this flag is no. (Default: no)'
         option :from, type: :string, required: true, desc: 'The replaced target data source name'
         option :to, type: :string, required: true, desc: 'Replacement data source name'
-        option :id, type: :numeric, required: false, desc: 'Query id. Either --id or --all option is required (Optional)'
-        option :all, type: :boolean, default: false, desc: 'The flag that all queries became replacement targets. Either --id or --all option is required. (Default: no)'
         def ds(config)
           init(config)
 
