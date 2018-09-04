@@ -48,6 +48,19 @@ module Redash
           Hashie::Mash.new(JSON.parse(res.body))
         end
 
+        def list_data_sources
+          url = build_url('/api/data_sources')
+          params = {
+            api_key: redash_api_key,
+          }
+          logger.debug { "[Redash::Query::Replace::RedashQueryClient] list_data_sources params: #{mask_values(params)}" }
+          res = RestClient.get(url, params: params)
+          raise_if_error_code(res)
+          JSON.parse(res.body).map do |ds|
+            Hashie::Mash.new(ds)
+          end
+        end
+
         private def logger
           Replace.logger
         end
