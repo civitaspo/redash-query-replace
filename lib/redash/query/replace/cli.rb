@@ -14,6 +14,7 @@ module Redash
         end
 
 
+        desc "query", "Replace matched string inside query text."
         option :log_level, aliases: ["-l"], type: :string, default: 'info', desc: 'Log level such as fatal, error, warn, info, or debug. (Default: info)'
         option :log, type: :string, default: 'STDOUT',desc: 'Output log to a file (Default: STDOUT)'
         option :env_file, type: :string, required: false, desc: 'Env vars file (Optional)'
@@ -28,6 +29,7 @@ module Redash
 
         end
 
+        desc "ds", "Replace data source that query has."
         option :log_level, aliases: ["-l"], type: :string, default: 'info', desc: 'Log level such as fatal, error, warn, info, or debug. (Default: info)'
         option :log, type: :string, default: 'STDOUT',desc: 'Output log to a file (Default: STDOUT)'
         option :env_file, type: :string, required: false, desc: 'Env vars file (Optional)'

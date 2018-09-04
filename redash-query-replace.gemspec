@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Civitaspo"]
   spec.email         = ["civitaspo@gmail.com"]
 
-  spec.summary       = %q{Command Line Tool to replace queries on Redash about query, datasource, and so on.}
-  spec.description   = %q{Command Line Tool to replace queries on Redash about query, datasource, and so on.}
+  spec.summary       = %q{Command Line Tool to replace queries on Redash about query, data source, and so on.}
+  spec.description   = %q{Command Line Tool to replace queries on Redash about query, data source, and so on.}
   spec.homepage      = "https://github.com/civitaspo/redash-query-replace"
 
   spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do

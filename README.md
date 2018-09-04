@@ -1,6 +1,6 @@
 # redash-query-replace
 
-Command Line Tool to replace queries on Redash about query, datasource, and so on.
+Command Line Tool to replace queries on Redash about query, data source, and so on.
 
 ## Example
 
@@ -11,10 +11,10 @@ $ redash-qr query --from 'database.table1' --to 'database.table2' --id 5
 ## replace all queries
 $ redash-qr query --from 'database.table1' --to 'database.table2' --all
 
-## replace datasource the query id 5 has
+## replace data source the query id 5 has
 $ redash-qr ds --from mysql_a --to mysql_b --query-id 5
 
-## replace datasource all queries have
+## replace data source all queries have
 $ redash-qr ds --from mysql_a --to mysql_b --all
 
 ```
