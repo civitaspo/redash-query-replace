@@ -1,6 +1,9 @@
 require 'redash/query/replace/version'
+require 'redash/query/replace/error'
 require 'redash/query/replace/logger'
 require 'redash/query/replace/cli'
+require 'redash/query/replace/redash_query_client'
+
 
 module Redash
   module Query
