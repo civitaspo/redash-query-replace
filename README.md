@@ -33,7 +33,7 @@ You can also define then on `.env` file. (Ref. [dotenv doc](https://github.com/b
 Replace query text.
 
 - **--exec**: Run actually. Dry run if this flag is no. (flag, default: no)
-- **--from**: The replaced target string in query text (string, required)
+- **--from**: Replaced target regexp in query text (string, required)
 - **--to**: Replacement string (string, required)
 - **--id**: Query id. Either **--id** or **--all** option is required. (integer, optional)
 - **--all**: The flag that all queries became replacement targets. Either **--id** or **--all** option is required. (flag, default: no)
