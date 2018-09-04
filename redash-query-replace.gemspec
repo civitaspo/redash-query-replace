@@ -27,4 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "thor"
   spec.add_dependency "dotenv"
   spec.add_dependency "rest-client"
+  spec.add_dependency "hashie"
 end
