@@ -27,6 +27,14 @@ module Redash
           init(config)
 
 
+        def query
+          init(options)
+          runner = ReplaceQueryText.new(redash_query_client: redash_client, dry_run: !options[:exec])
+          if options[:all]
+            runner.replace_all(from: options[:from], to: options[:to])
+          else
+            runner.replace(query_id: options[:id], from: options[:from], to: options[:to])
+          end
         end
 
         desc "ds", "Replace data source that query has."
