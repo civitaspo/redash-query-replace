@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dotenv"
   spec.add_dependency "rest-client"
   spec.add_dependency "hashie"
+  spec.add_dependency "differ"
 end
