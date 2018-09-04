@@ -24,7 +24,7 @@ module Redash
               page: page,
               page_size: max_results
             }
-            logger.debug { "[Redash::Query::Replace::RedashQueryClient] list_queries params: #{mask_values(params)}" }
+            logger.debug { "[Redash::Query::Replace::RedashQueryClient] list_queries url: #{url}, params: #{mask_values(params)}" }
             res = rescue_request_failed do
               RestClient.get(url, params: params)
             end
@@ -43,7 +43,7 @@ module Redash
           params = {
             api_key: redash_api_key,
           }
-          logger.debug { "[Redash::Query::Replace::RedashQueryClient] get_query params: #{mask_values(params)}" }
+          logger.debug { "[Redash::Query::Replace::RedashQueryClient] get_query url: #{url}, params: #{mask_values(params)}" }
           res = rescue_request_failed do
             RestClient.get(url, params: params)
           end
@@ -55,7 +55,7 @@ module Redash
           params = {
             api_key: redash_api_key,
           }
-          logger.debug { "[Redash::Query::Replace::RedashQueryClient] list_data_sources params: #{mask_values(params)}" }
+          logger.debug { "[Redash::Query::Replace::RedashQueryClient] list_data_sources url: #{url}, url: #{url}, params: #{mask_values(params)}" }
           res = rescue_request_failed do
             RestClient.get(url, params: params)
           end
@@ -74,7 +74,7 @@ module Redash
           payload = {
             query: query_text,
           }
-          logger.debug { "[Redash::Query::Replace::RedashQueryClient] update_query_text params: #{mask_values(params)}, query: #{query_text}" }
+          logger.debug { "[Redash::Query::Replace::RedashQueryClient] update_query_text url: #{url}, url: #{url}, params: #{mask_values(params)}, query: #{query_text}" }
           res = rescue_request_failed do
             RestClient.post(url, payload.to_json, params: params, "Content-Type" => "application/json")
           end
@@ -96,7 +96,7 @@ module Redash
           payload = {
             data_source_id: data_source_id,
           }
-          logger.debug { "[Redash::Query::Replace::RedashQueryClient] update_query_data_source params: #{mask_values(params)}, data_source_id: #{data_source_id}" }
+          logger.debug { "[Redash::Query::Replace::RedashQueryClient] update_query_data_source url: #{url}, url: #{url}, params: #{mask_values(params)}, data_source_id: #{data_source_id}" }
           res = rescue_request_failed do
             RestClient.post(url, payload.to_json, params: params, "Content-Type" => "application/json")
           end
