@@ -68,6 +68,10 @@ module Redash
           ENV['REDASH_API_KEY'] || raise(ConfigError, "[Redash::Query::Replace] env var `REDASH_API_KEY` must be set.")
         end
 
+        private def redash_client
+          RedashQueryClient.new(redash_url: redash_url, redash_api_key: redash_api_key)
+        end
+
       end
     end
   end

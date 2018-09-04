@@ -25,8 +25,9 @@ module Redash
               page_size: max_results
             }
             logger.debug { "[Redash::Query::Replace::RedashQueryClient] list_queries params: #{mask_values(params)}" }
-            res = RestClient.get(url, params: params)
-            raise_if_error_code(res)
+            res = rescue_request_failed do
+              RestClient.get(url, params: params)
+            end
             Hashie::Mash.new(JSON.parse(res.body))
           end
           num_loop = 0
@@ -43,8 +44,9 @@ module Redash
             api_key: redash_api_key,
           }
           logger.debug { "[Redash::Query::Replace::RedashQueryClient] get_query params: #{mask_values(params)}" }
-          res = RestClient.get(url, params: params)
-          raise_if_error_code(res)
+          res = rescue_request_failed do
+            RestClient.get(url, params: params)
+          end
           Hashie::Mash.new(JSON.parse(res.body))
         end
 
@@ -54,11 +56,51 @@ module Redash
             api_key: redash_api_key,
           }
           logger.debug { "[Redash::Query::Replace::RedashQueryClient] list_data_sources params: #{mask_values(params)}" }
-          res = RestClient.get(url, params: params)
-          raise_if_error_code(res)
+          res = rescue_request_failed do
+            RestClient.get(url, params: params)
+          end
           JSON.parse(res.body).map do |ds|
             Hashie::Mash.new(ds)
           end
+        end
+
+        def update_query_text(id:, query_text:)
+          raise ArgumentError, "[Redash::Query::Replace::RedashQueryClient] update_query_text: id must be Numeric" unless id.is_a?(Numeric)
+          raise ArgumentError, "[Redash::Query::Replace::RedashQueryClient] update_query_text: query_text must be String" unless query_text.is_a?(String)
+          url = build_url("/api/queries/#{id}")
+          params = {
+            api_key: redash_api_key
+          }
+          payload = {
+            query: query_text,
+          }
+          logger.debug { "[Redash::Query::Replace::RedashQueryClient] update_query_text params: #{mask_values(params)}, query: #{query_text}" }
+          res = rescue_request_failed do
+            RestClient.post(url, payload.to_json, params: params, "Content-Type" => "application/json")
+          end
+          Hashie::Mash.new(JSON.parse(res.body))
+        end
+
+        def update_query_data_source(id:, data_source_name:)
+          raise ArgumentError, "[Redash::Query::Replace::RedashQueryClient] update_query_data_source: id must be Numeric" unless id.is_a?(Numeric)
+          raise ArgumentError, "[Redash::Query::Replace::RedashQueryClient] update_query_data_source: data_source_name must be String" unless data_source_name.is_a?(String)
+
+          unless data_source_id = list_data_sources.select {|ds| ds.name == data_source_name}.first&.id
+            raise(ArgumentError, "[Redash::Query::Replace::RedashQueryClient] update_query_data_source: data_source_name: #{data_source_name} is not found.")
+          end
+
+          url = build_url("/api/queries/#{id}")
+          params = {
+            api_key: redash_api_key
+          }
+          payload = {
+            data_source_id: data_source_id,
+          }
+          logger.debug { "[Redash::Query::Replace::RedashQueryClient] update_query_data_source params: #{mask_values(params)}, data_source_id: #{data_source_id}" }
+          res = rescue_request_failed do
+            RestClient.post(url, payload.to_json, params: params, "Content-Type" => "application/json")
+          end
+          Hashie::Mash.new(JSON.parse(res.body))
         end
 
         private def logger
@@ -69,14 +111,13 @@ module Redash
           File.join(redash_url, path)
         end
 
-        private def raise_if_error_code(res)
-          case res.code / 100
-          when 4
-            raise RedashApi4XXError, res.body
-          when 5
-            raise RedashApi5XXError, res.body
-          else
-            logger.debug { "code: #{res.code}, headers: #{mask_values(res.headers)}" }
+        private def rescue_request_failed(&request_proc)
+          request_proc.call
+        rescue RestClient::RequestFailed => e
+          case e.response.code / 100
+          when 4 then raise RedashApi4XXError, "response: #{e.response}, message: #{e.message}"
+          when 5 then raise RedashApi5XXError, "response: #{e.response}, message: #{e.message}"
+          else raise e
           end
         end
 
