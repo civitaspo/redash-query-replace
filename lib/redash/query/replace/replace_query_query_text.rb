@@ -3,7 +3,7 @@ require 'differ'
 module Redash
   module Query
     module Replace
-      class ReplaceQueryText
+      class ReplaceQueryQueryText
 
         attr_reader :redash_query_client, :backup_dir
 
