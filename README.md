@@ -1,6 +1,6 @@
 # redash-query-replace
 
-Command Line Tool to replace queries on Redash about query, datasource, and so on.
+Command Line Tool to replace queries on Redash about query, data source, and so on.
 
 ## Example
 
@@ -11,10 +11,10 @@ $ redash-qr query --from 'database.table1' --to 'database.table2' --id 5
 ## replace all queries
 $ redash-qr query --from 'database.table1' --to 'database.table2' --all
 
-## replace datasource the query id 5 has
+## replace data source the query id 5 has
 $ redash-qr ds --from mysql_a --to mysql_b --query-id 5
 
-## replace datasource all queries have
+## replace data source all queries have
 $ redash-qr ds --from mysql_a --to mysql_b --all
 
 ```
@@ -32,7 +32,8 @@ You can also define then on `.env` file. (Ref. [dotenv doc](https://github.com/b
 
 Replace query text.
 
-- **--from**: The replaced target string in query text (string, required)
+- **--exec**: Run actually. Dry run if this flag is no. (flag, default: no)
+- **--from**: Replaced target regexp in query text (string, required)
 - **--to**: Replacement string (string, required)
 - **--id**: Query id. Either **--id** or **--all** option is required. (integer, optional)
 - **--all**: The flag that all queries became replacement targets. Either **--id** or **--all** option is required. (flag, default: no)
@@ -41,6 +42,7 @@ Replace query text.
 
 Replace datasource queries have.
 
+- **--exec**: Run actually. Dry run if this flag is no. (flag, default: no)
 - **--from**: The replaced target datasource name (string, required)
 - **--to**: Replacement datasource name (string, required)
 - **--id**: Query id. Either **--id** or **--all** option is required. (integer, optional)

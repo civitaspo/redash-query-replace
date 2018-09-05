@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
 
 require "redash/query/replace"
+
+Redash::Query::Replace::Cli.start(ARGV)
