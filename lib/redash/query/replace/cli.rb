@@ -35,10 +35,16 @@ module Redash
         end
 
         desc "ds", "Replace data source that query has."
-        option :from, type: :string, required: true, desc: 'The replaced target data source name'
+        option :from, type: :string, default: nil, desc: 'The replaced target data source name'
         option :to, type: :string, required: true, desc: 'Replacement data source name'
         def ds
           init
+          runner = ReplaceQueryDataSource.new(redash_query_client: redash_client, dry_run: !options[:exec], backup_dir: backup_dir)
+          if options[:all]
+            runner.replace_all(from: options[:from], to: options[:to])
+          else
+            runner.replace(query_id: options[:id], data_source_name: options[:to])
+          end
 
         end
 
