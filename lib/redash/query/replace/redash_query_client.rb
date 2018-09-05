@@ -10,11 +10,14 @@ module Redash
 
         attr_reader :redash_url, :redash_api_key
 
+        # @param [String] redash_url
+        # @param [String] redash_api_key
         def initialize(redash_url:, redash_api_key:)
           @redash_url = redash_url
           @redash_api_key = redash_api_key
         end
 
+        # @param [block] query_proc
         def list_queries(&query_proc)
           url = build_url('/api/queries')
           max_results = 250
@@ -38,6 +41,7 @@ module Redash
           end
         end
 
+        # @param [Numeric] id
         def get_query(id:)
           url = build_url("/api/queries/#{id}")
           params = {
@@ -64,6 +68,8 @@ module Redash
           end
         end
 
+        # @param [Numeric] id
+        # @param [String] query_text
         def update_query_text(id:, query_text:)
           raise ArgumentError, "[Redash::Query::Replace::RedashQueryClient] update_query_text: id must be Numeric" unless id.is_a?(Numeric)
           raise ArgumentError, "[Redash::Query::Replace::RedashQueryClient] update_query_text: query_text must be String" unless query_text.is_a?(String)
@@ -81,6 +87,8 @@ module Redash
           Hashie::Mash.new(JSON.parse(res.body))
         end
 
+        # @param [Numeric] id
+        # @param [String] data_source_name
         def update_query_data_source(id:, data_source_name:)
           raise ArgumentError, "[Redash::Query::Replace::RedashQueryClient] update_query_data_source: id must be Numeric" unless id.is_a?(Numeric)
           raise ArgumentError, "[Redash::Query::Replace::RedashQueryClient] update_query_data_source: data_source_name must be String" unless data_source_name.is_a?(String)
