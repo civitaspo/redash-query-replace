@@ -3,7 +3,7 @@ require 'differ'
 module Redash
   module Query
     module Replace
-      class ReplaceQueryText
+      class ReplaceQueryQueryText
 
         attr_reader :redash_query_client, :backup_dir
 
@@ -29,8 +29,7 @@ module Redash
         # @param [String] to
         def replace(query_id:, from:, to:)
           query = redash_query_client.get_query(id: query_id)
-          backup(query_id: query_id, content: query.to_json)
-          replace_query(query_id: query.id, before: query.query, from: from, to: to)
+          replace_query(query: query, before: query.query, from: from, to: to)
         end
 
 
@@ -38,22 +37,28 @@ module Redash
         # @param [String] to
         def replace_all(from:, to:)
           redash_query_client.list_queries do |query|
-            backup(query_id: query.id, content: query.to_json)
-            replace_query(query_id: query.id, before: query.query, from: from, to: to)
+            replace_query(query: query, before: query.query, from: from, to: to)
           end
         end
 
-        private def replace_query(query_id:, before:, from:, to:)
-          logger.info { "[Redash::Query::Replace::ReplaceQueryText] Replace query id: #{query_id}, from: #{from}, to: #{to}" }
+        private def replace_query(query:, before:, from:, to:)
           after = before.gsub(/#{from}/, to)
           if before == after
-            logger.info { "[Redash::Query::Replace::ReplaceQueryText] query id: #{query_id} does not have replacement targets."}
+            logger.info { "[Redash::Query::Replace::ReplaceQueryText] query id: #{query.id} does not have replacement targets."}
             return
           end
+
+          logger.info { "[Redash::Query::Replace::ReplaceQueryText] Will replace query id: #{query.id}, from: #{from}, to: #{to}" }
+
           Differ.format = :color
           $stdout.puts(Differ.diff_by_word(after, before))
-          unless dry_run?
-            redash_query_client.update_query_text(id: query_id, query_text: after)
+
+          backup(query_id: query.id, content: query.to_json)
+          if dry_run?
+            logger.info { "[Redash::Query::Replace::ReplaceQueryText] (DryRun) Finish to replace query id: #{query.id}, from: #{from}, to: #{to}" }
+          else
+            redash_query_client.update_query_text(id: query.id, query_text: after)
+            logger.info { "[Redash::Query::Replace::ReplaceQueryText] Finish to replace query id: #{query.id}, from: #{from}, to: #{to}" }
           end
         end
 

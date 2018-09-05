@@ -26,7 +26,7 @@ module Redash
         option :to, type: :string, required: true, desc: 'Replacement string'
         def query
           init
-          runner = ReplaceQueryText.new(redash_query_client: redash_client, dry_run: !options[:exec], backup_dir: backup_dir)
+          runner = ReplaceQueryQueryText.new(redash_query_client: redash_client, dry_run: !options[:exec], backup_dir: backup_dir)
           if options[:all]
             runner.replace_all(from: options[:from], to: options[:to])
           else
