@@ -19,13 +19,13 @@ module Redash
         class_option :exec, type: :boolean, default: false, dest: 'Run actually. Dry run if this flag is no. (Default: no)'
         class_option :id, type: :numeric, required: false, desc: 'Query id. Either --id or --all option is required (Optional)'
         class_option :all, type: :boolean, default: false, desc: 'The flag that all queries became replacement targets. Either --id or --all option is required. (Default: no)'
-        class_option :backup_dir, type: :string, required: false, desc: 'backup directory (Default: create tmp dir)'
+        class_option :backup_dir, type: :string, default: nil, desc: 'backup directory (Default: create tmp dir)'
 
         desc "query", "Replace matched string inside query text."
         option :from, type: :string, required: true, desc: 'Replaced target regexp in query text'
         option :to, type: :string, required: true, desc: 'Replacement string'
         def query
-          init(options)
+          init
           runner = ReplaceQueryText.new(redash_query_client: redash_client, dry_run: !options[:exec], backup_dir: backup_dir)
           if options[:all]
             runner.replace_all(from: options[:from], to: options[:to])
@@ -38,23 +38,23 @@ module Redash
         option :from, type: :string, required: true, desc: 'The replaced target data source name'
         option :to, type: :string, required: true, desc: 'Replacement data source name'
         def ds
-          init(options)
+          init
 
         end
 
         no_commands do
-          private def init(options)
-            load_env(options[:env_file])
-            setup_logger(options[:log], options[:log_level])
+          private def init
+            load_env
+            setup_logger
           end
 
-          private def setup_logger(log, log_level)
+          private def setup_logger(log = options[:log], log_level = options[:log_level])
             logger = Logger.new(log)
             logger.level = log_level
             Replace.logger = logger
           end
 
-          private def load_env(env_file = nil)
+          private def load_env(env_file = options[:env_file])
             if env_file
               Dotenv.load(env_file)
             else
