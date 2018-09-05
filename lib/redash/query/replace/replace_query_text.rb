@@ -58,7 +58,7 @@ module Redash
         end
 
         private def backup(query_id:, content:)
-          fname = File.join(backup_dir, query_id)
+          fname = File.join(backup_dir, query_id.to_s)
           logger.info { "[Redash::Query::Replace::ReplaceQueryText] backup original query into: #{fname}" }
           File.write(fname, content)
         end
