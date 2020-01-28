@@ -1,7 +1,17 @@
 FROM ruby:2.5-alpine
 
-ARG version
+WORKDIR /work
+COPY . /work/
 
-RUN if [[ "$version" = "" ]]; then gem install redash-query-replace --no-document; else gem install redash-query-replace --no-document --version ${version}; fi
+RUN apk update && \
+	apk upgrade && \
+	apk add --no-cache git gcc g++ libc-dev linux-headers make
+
+RUN source bin/setup && rake spec && bundle exec rake install
+
+ARG REDASH_URL
+ARG REDASH_API_KEY
+ENV REDASH_URL $REDASH_URL
+ENV REDASH_API_KEY $REDASH_API_KEY
 
 ENTRYPOINT ["redash-qr"]
