@@ -1,17 +1,13 @@
-FROM ruby:2.5-alpine
+FROM ruby:2.5 as builder
+
+WORKDIR /tmp/redash-query-replace
+COPY . /tmp/redash-query-replace
+RUN gem build redash-query-replace.gemspec
+
+FROM ruby:2.5
 
 WORKDIR /work
-COPY . /work/
-
-RUN apk update && \
-	apk upgrade && \
-	apk add --no-cache git gcc g++ libc-dev linux-headers make
-
-RUN source bin/setup && rake spec && bundle exec rake install
-
-ARG REDASH_URL
-ARG REDASH_API_KEY
-ENV REDASH_URL $REDASH_URL
-ENV REDASH_API_KEY $REDASH_API_KEY
+COPY --from=builder /tmp/redash-query-replace/redash-query-replace-0.0.1.gem .
+RUN gem install redash-query-replace-0.0.1.gem
 
 ENTRYPOINT ["redash-qr"]
