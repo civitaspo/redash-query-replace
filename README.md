@@ -81,18 +81,6 @@ Or install it yourself as:
 
     $ gem install redash-query-replace
 	
-### Use Docker	
-
-Build docker image on local
-```
-docker build -t ${USER}/redash-rp --build-arg REDASH_URL=<your redash url> --build-arg REDASH_API_KEY=<your redash api key>
-```
-
-Run docker image
-```
-docker run --rm -v `pwd`/:/vol ${USER}/redash-rp query --from 'database.table1' --to 'database.table2' --id 5
-```
-
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
